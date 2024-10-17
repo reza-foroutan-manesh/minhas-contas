@@ -1,0 +1,195 @@
+{% include "header.html" %}
+{%block styles%}
+
+<style xmlns="http://www.w3.org/1999/html">
+        .table-container {
+            overflow-x: auto; /* Enables horizontal scrolling if needed */
+            border: 1px solid #ddd; /* Adds a border around the container */
+            padding: 15px; /* Adds some padding inside the container */
+            overflow-y: auto;
+            color:#2C4E80;
+            height: 100%; /* To have a scroll bar */
+        }
+        table {
+            width: 100%; /* Makes the table take up the full width of the container */
+            border-collapse: collapse; /* Ensures borders are collapsed into a single border */
+
+        }
+        th, td {
+            border: 1px solid #ddd; /* Adds borders to table cells */
+            padding: 8px; /* Adds padding to table cells */
+            text-align: left; /* Aligns text to the left */
+        }
+        th {
+            background-color: #f2f2f2; /* Adds a background color to header cells */
+        }
+
+
+
+            .modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(247,150,80,0.8);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 40%;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+
+.hidden-link {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        @media print {
+            .hidden-link::after {
+                content: none;  /* Hide the link address */
+            }
+
+            /* Additional styles to clean up the print output */
+            a[href]::after {
+                content: none !important;
+            }
+            a {
+                text-decoration: none;
+                color: inherit;
+            }
+        }
+
+
+    </style>
+{%endblock%}
+
+
+<div class="table-container" >
+<table class="table" id="example">
+
+    <thead>
+        <tr>
+            <th scope="col" style="color:#2C4E80">Id</th>
+            <th scope="col" style="color:#2C4E80">Item</th>
+            <th scope="col" style="color:#2C4E80">Date Of Purchase</th>
+            <th scope="col" style="color:#2C4E80">Price</th>
+            <th scope="col" style="color:#2C4E80">Action</th>
+        </tr>
+    </thead>
+    <tbody class="table-group-divider scroll">
+        {% for item in data %}
+            {% if is_for_edit and item['id'] == selected_id %}
+                <tr>
+                    <form method="post" action="{{ url_for('details', id=item.id)}}">
+                        <th>{{item.id}}<input name="id" value="{{item.id}}" hidden="hidden"></th>
+                        <td><input id="name" name="name" type="text" placeholder="{{item.item_name}}" required></td>
+                        <td><input id="month" name="month" type="month" value="{{item.item_month}}" required></td>
+                        <td><input id="price" name="price"  placeholder="{{item.item_price}}" required></td>
+                        <td>
+                            <input type="hidden" name="id" value="{{item.id}}">
+                            <div class="text-center">
+                                <button class="btn btn-light py-0 px-0" type="submit">
+                                    <i class="fa fa-check-circle fa-2x" aria-hidden="true" style="color: green;"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </form>
+                </tr>
+            {% else %}
+                {%if current_user.id == item.user_id%}
+                <tr>
+                    <th>{{item.id}}</th>
+                    <td>{{item.item_name}}</td>
+                    <td>{{item.item_month}}</td>
+                    <td>{{item.item_price}}</td>
+                    <td>
+                        <form method="post">
+                            <div class="text-center">
+                                <a href="#" class="delete" onclick="confirmDelete(this)" data-id="{{item.id}}">
+                                    <i class=" hidden-link fa-solid fa-trash fa-lg" style="color: #ff0000; margin-right:8%;"></i>
+                                </a>
+                                <a  href="{{url_for('details', id=item.id)}}" onclick="confirmEdit(this)" data-id="{{item.id}}" type="submit">
+                                    <i class="hidden-link fa-regular fa-pen-to-square fa-lg" style="color: #FFD43B;"></i>
+                                </a>
+                            </div>
+                        </form>
+                    </td>
+                </tr>
+        {%endif%}
+            {% endif %}
+        {% endfor %}
+    </tbody>
+
+<!-- Modal -->
+<div id="deleteModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('deleteModal')">&times;</span>
+        <p>Are you sure you want to delete this item?</p>
+        <div class="container">
+            <a class="btn btn-light" onclick="closeModal('deleteModal')" style="width:10%; margin-left:22%">Cancel</a>
+            <a class="btn btn-outline-danger mx-3" id="confirmDeleteBtn" style="width:10%;">Delete</a>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<script>
+  $(document).ready(function() {
+    $('#example').DataTable({
+<!--      //disable sorting on last column-->
+<!--      "columnDefs": [-->
+<!--        { "orderable": false, "targets": 5 }-->
+<!--      ],-->
+      language: {
+        //customize pagination prev and next buttons: use arrows instead of words
+        'paginate': {
+          'previous': '<span class="fa fa-chevron-left"></span>',
+          'next': '<span class="fa fa-chevron-right"></span>'
+        },
+        //customize number of elements to be displayed
+        "lengthMenu": 'Display <select class="form-control ">'+
+        '<option value="10">10</option>'+
+        '<option value="20">20</option>'+
+        '<option value="30">30</option>'+
+        '<option value="40">40</option>'+
+        '<option value="50">50</option>'+
+        '<option value="-1">All</option>'+
+        '</select> results'+
+        '<a type="button" title="Print This Page" class="mx-5 px-0 py-0" value="Print" onClick="window.print()"><img src="./static/assets/img/printer.svg"></a>'+
+        '<a type="button" title="Open Calculator" class=" px-0 py-0" value="Calculator" onClick="openCalculator()"><img src="./static/assets/img/calculator.svg"></a>'+
+        '<a href="{{url_for('home')}}" Title="Add New Item" type="button" class="mx-5"><img src="./static/assets/img/add.svg"></a>'
+
+      }
+    })
+} );
+
+function openCalculator() {
+            fetch('/open-calculator');
+        }
+</script>
+{% include "footer.html" %}

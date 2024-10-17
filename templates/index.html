@@ -1,0 +1,38 @@
+{% include 'header.html' %}
+{% block title %}
+<title>Home</title>
+{% endblock %}
+{% block styles %}
+ <style>
+        body {
+            background-color:#ec3014;
+            background-image: url('{{url_for('static', filename='assets/img/Home.png')}}'); /* Replace with your image URL */
+            background-size: contain; /* Make the image cover the entire page */
+            background-repeat: no-repeat; /* Prevent the image from repeating */
+            background-attachment: fixed; /* Make the background image fixed */
+        }
+     .btn-lets-go{
+
+     padding-right:5%;
+     padding-left:5%;
+     margin-left:70%;
+      margin-top:35%
+      }
+    </style>
+{% endblock %}
+ <div class="container-fluid px-4">
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                  {% for message in messages %}
+                    <p class='flashes opacity my-3' style="font-size:30px;font-weight: bold;color:green; text-align:center">{{ message }}</p>
+                  {% endfor %}
+               {% endif %}
+            {% endwith %}
+        </div>
+
+
+<div>
+    <a class="btn btn-dark btn-lets-go fs-2" type="submit" href="{{url_for('login')}}">Log In</a>
+</div>
+
+{% include 'footer.html' %}

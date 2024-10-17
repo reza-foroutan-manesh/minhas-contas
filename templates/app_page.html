@@ -1,0 +1,165 @@
+{% include 'header.html' %}
+{% block title %}
+<title> Prestação De Contas</title>
+{% endblock %}
+
+{% block styles %}
+<style>
+
+body{
+background-color:#ec3014;
+}
+
+
+    .login-box {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 800px;
+  padding: 40px;
+  transform: translate(-50%, -50%);
+  background: rgba(24, 20, 20, 0.987);
+  box-sizing: border-box;
+  box-shadow: 0 15px 25px rgba(0,0,0,.6);
+  border-radius: 10px;
+}
+
+.login-box .user-box {
+  position: relative;
+}
+
+.login-box .user-box input[type="month"]{
+  width: 20%;
+  color-scheme: dark;
+}
+
+
+.login-box .user-box input {
+  width: 65%;
+  padding: 10px 0;
+  font-size: 16px;
+  color: #fff;
+  margin-bottom: 30px;
+  border: none;
+  border-bottom: 1px solid #fff;
+  outline: none;
+  background: transparent;
+}
+
+.login-box .user-box label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 10px 0;
+  font-size: 16px;
+  color: #fff;
+  pointer-events: none;
+  transition: .5s;
+}
+
+.login-box .user-box input:focus ~ label,
+.login-box .user-box input:valid ~ label {
+  top: -20px;
+  left: 0;
+  color: #bdb8b8;
+  font-size: 12px;
+}
+
+.login-box form input[type="submit"]{
+  position: relative;
+  display: inline-block;
+  padding: 10px 20px;
+  color: #ffffff;
+  font-size: 16px;
+  text-decoration: none;
+  text-transform: uppercase;
+  overflow: hidden;
+  transition: .5s;
+  margin-top: 40px;
+  letter-spacing: 4px
+}
+
+.login-box input[type="submit"]:hover{
+  background: #ec3014;
+  color: #fff;
+  border-radius: 5px;
+  box-shadow: 0 0 5px #ec3014,
+              0 0 25px #ec3014,
+              0 0 50px #ec3014,
+              0 0 100px #ec3014;
+}
+
+.login-box input[type="submit"]span {
+  position: absolute;
+  display: block;
+}
+
+@keyframes btn-anim1 {
+  0% {
+    left: -100%;
+  }
+
+  50%,100% {
+    left: 100%;
+  }
+}
+
+.login-box input[type="submit"] span:nth-child(1){
+  bottom: 2px;
+  left: -100%;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #ec3014);
+  animation: btn-anim1 2s linear infinite;
+}
+</style>
+{% endblock %}
+
+
+<div class="login-box">
+
+  <form action="{{url_for('home')}}" method="post">
+    <div class="user-box">
+            <input name="month" type="month" >
+        </div>
+          <div class="user-box">
+            <input name="item">
+            <label>Item</label>
+          </div>
+          <div class="user-box">
+
+            <input name="price"  value="R$ ">
+        <label>Price</label>
+
+
+              {% if total %}
+              <div class="float-end" style="margin-top:-25px; padding-right:60px">
+                <h6 style="color:white; text-align:center">Total Até Agora:</h6>
+                  <h2 style="color:red; text-align:center">R${{'%0.2f'|format(total|float)}}</h2>
+              </div>
+
+      {% endif %}
+<div class="float-end" style="margin-top:-25px; padding-right:60px">
+        {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <p style="color:red;">{{message}}</p>
+                    {% endfor %}
+                {% endif %}
+        {% endwith %}
+      </div>
+          </div>
+   <center>
+
+       <input name="submit" class="btn btn-outline-light mx-4 " type="submit" value="Add">
+       <input name="submit" class="btn btn-outline-light mx-4" type="submit" value="Total">
+       <input name="submit" class="btn btn-outline-light mx-4" type="submit" value="Details">
+       <input name="submit" class="btn btn-outline-light mx-4" type="submit" value="Exit">
+
+   </center>
+
+  </form>
+</div>
+
+
+{% include 'footer.html' %}

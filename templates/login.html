@@ -1,0 +1,55 @@
+
+{%include 'header.html'%}
+{%block title%}
+      <title>Login & Register</title>
+{% endblock %}
+<div class="login-reg-panel">
+		<div class="login-info-box">
+			<h2>Have an account?</h2>
+			<p>Lorem ipsum dolor sit amet</p>
+			<label id="label-register" for="log-reg-show">Login</label>
+			<input type="radio" name="active-log-panel" id="log-reg-show"  checked="checked">
+		</div>
+							
+		<div class="register-info-box">
+			<h2>Don't have an account?</h2>
+			<p>Lorem ipsum dolor sit amet</p>
+			<label id="label-login" for="log-login-show">Register</label>
+			<input type="radio" name="active-log-panel" id="log-login-show">
+		</div>
+
+			<div class="white-panel">
+				<form action="{{url_for('login')}}" method="post">
+					<div class="login-show">
+						<h2>LOGIN</h2>
+						<input type="email" placeholder="Email" name="login-email">
+						<input type="password" placeholder="Password" name="login-password">
+						<input type="submit" value="Login" >
+						<div>
+						{% with messages = get_flashed_messages() %}
+							{% if messages %}
+								{% for message in messages %}
+									<p style="font-weight: bold; color:red;">{{message}}</p>
+								{% endfor %}
+							{% endif %}
+						{% endwith %}
+					</div>
+						<a href="">Forgot password?</a>
+					</div>
+
+				</form>
+				<form action="{{url_for('register')}}" method="post">
+					<div class="register-show">
+						<h2>REGISTER</h2>
+						<input type="text" placeholder="First Name" name="fname">
+						<input type="text" placeholder="Last Name" name="lname">
+						<input type="email" placeholder="Email" name="register-email">
+						<input type="password" placeholder="Password" name="register-password">
+						<input type="password" placeholder="Confirm Password" name="register-password-confirm">
+						<input type="submit" value="Register">
+					</div>
+				</form>
+			</div>
+
+	</div>
+{%include 'footer.html'%}
