@@ -4,7 +4,6 @@ from mysql.connector import Error
 import os
 
 
-
 class Connecting:
     def __init__(self):
         pw = os.environ.get("DB_PW")

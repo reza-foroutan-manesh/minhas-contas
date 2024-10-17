@@ -13,7 +13,8 @@ from datetime import datetime as dt
 import pandas as pd
 from SQLconnection import Connecting
 
-connecting = Connecting()
+
+
 
 app = Flask(__name__)
 DB_PW = os.environ.get("DB_PW")
@@ -63,6 +64,7 @@ class User(UserMixin, db.Model):
 with app.app_context():
     db.create_all()
 
+connecting = Connecting()
 
 @app.route('/', methods=['GET', 'POST'])
 def entry():
