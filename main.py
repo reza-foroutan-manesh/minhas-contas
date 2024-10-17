@@ -21,7 +21,7 @@ DB_PW = os.environ.get("DB_PW")
 DB_ADDRESS = os.environ.get("DB_ADDRESS")
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://username:password@host:port/database
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('URI_DB', f'mysql+pymysql://root:{DB_PW}@{DB_ADDRESS}/PrestacaoDeCompras')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('URI_DB', f'mysql://root:{DB_PW}@{DB_ADDRESS}/PrestacaoDeCompras')
 
 db = SQLAlchemy()
 db.init_app(app)
