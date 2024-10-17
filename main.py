@@ -16,10 +16,11 @@ from SQLconnection import Connecting
 connecting = Connecting()
 
 app = Flask(__name__)
-
-app.config["SECRET_KEY"] = 'Reza123456789'
+DB_PW = os.environ.get("DB_PW")
+DB_ADDRESS = os.environ.get("DB_ADDRESS")
+app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://username:password@host:port/database
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:Reza20270123@127.0.0.1:3306/PrestacaoDeCompras'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('URI_DB', f'mysql+pymysql://root:{DB_PW}@{DB_ADDRESS}/PrestacaoDeCompras')
 
 db = SQLAlchemy()
 db.init_app(app)

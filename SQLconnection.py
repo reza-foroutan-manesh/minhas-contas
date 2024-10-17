@@ -1,13 +1,13 @@
 import pandas
 import mysql.connector
 from mysql.connector import Error
-
+import os
 
 
 
 class Connecting:
     def __init__(self):
-        pw = 'Reza20270123'
+        pw = os.environ.get("DB_PW")
         db = 'PrestacaoDeCompras'
         self.connection = self.create_server_connection('127.0.0.1', 'root', pw)
         self.create_database_query = f"""create database {db}"""
