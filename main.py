@@ -24,6 +24,8 @@ app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
 
 app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+pymysql://{os.environ.get('DB_USER')}:{os.environ.get('DB_PW')}@{os.environ.get('DB_HOST')}/{os.environ.get('DB_NAME')}"
 
+connecting = Connecting()
+
 db = SQLAlchemy()
 db.init_app(app)
 
@@ -65,7 +67,6 @@ class User(UserMixin, db.Model):
 with app.app_context():
     db.create_all()
 
-connecting = Connecting()
 
 @app.route('/', methods=['GET', 'POST'])
 def entry():
