@@ -11,9 +11,54 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import calendar
 from datetime import datetime as dt
 import pandas as pd
-from SQLconnection import Connecting
+import mysql.connector
+from mysql.connector import Error
+
+def create_server_connection(host, user, password):
+    connection = None
+    try:
+        connection = mysql.connector.connect(
+            host=host,
+            user=user,
+            password=password
+        )
+        print('MySql is connecting')
+    except Error as err:
+        print(f"Error: {err}")
+    return connection
+
+    connection = create_server_connection('127.0.0.1', os.environ.get('DB_USER'), os.environ.get('DB_PW'))
 
 
+def create_database(connection, query):
+    cursor = connection.cursor()
+    try:
+        cursor.execute(query)
+        print("Database was created")
+    except Error as err:
+        print(f'Error: {err}')
+
+    create_database_query = f"""create database {os.environ.get('DB_NAME')}"""
+
+    create_database(connection, create_database_query)
+
+
+def create_database_connection(host, user, password, database):
+    connection = None
+    try:
+        connection = mysql.connector.connect(
+            host=host,
+            user=user,
+            password=password,
+            database=database
+        )
+        print("Database is connecting")
+    except Error as err:
+        print(f"Error: {err}")
+    return connection
+
+
+create_database_connection('127.0.0.1', os.environ.get('DB_USER'), os.environ.get('DB_PW'), os.environ.get('DB_NAME')),
 
 
 app = Flask(__name__)
@@ -24,7 +69,6 @@ app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
 
 app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+pymysql://{os.environ.get('DB_USER')}:{os.environ.get('DB_PW')}@{os.environ.get('DB_HOST')}/{os.environ.get('DB_NAME')}"
 
-connecting = Connecting()
 
 db = SQLAlchemy()
 db.init_app(app)
