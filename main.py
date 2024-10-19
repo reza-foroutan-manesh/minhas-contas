@@ -66,7 +66,7 @@ app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://username:password@host:port/database
 # f"mysql+pymysql://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}@{os.getenv('DB_HOST')}/{os.getenv('DB_NAME')}"
 
-app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+pymysql://{os.environ.get('DB_USER')}:{os.environ.get('DB_PW')}@{os.environ.get('DB_HOST')}/{os.environ.get('DB_NAME')}"
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DB_URI', f"mysql+pymysql://{os.environ.get('DB_USER')}:{os.environ.get('DB_PW')}@{os.environ.get('DB_HOST')}/{os.environ.get('DB_NAME')}")
 
 
 db = SQLAlchemy()
