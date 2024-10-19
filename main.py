@@ -27,7 +27,9 @@ def create_server_connection(host, user, password):
         print(f"Error: {err}")
     return connection
 
+
 connection = create_server_connection('127.0.0.1', 'root', 'Reza20270123')
+
 
 def create_database(connection, query):
     cursor = connection.cursor()
@@ -36,6 +38,7 @@ def create_database(connection, query):
         print("Database was created")
     except Error as err:
         print(f'Error: {err}')
+
 
 create_database_query = f"""create database contas"""
 
