@@ -27,8 +27,7 @@ def create_server_connection(host, user, password):
         print(f"Error: {err}")
     return connection
 
-connection = create_server_connection('127.0.0.1', os.environ.get('DB_USER'), os.environ.get('DB_PW'))
-
+connection = create_server_connection('127.0.0.1', 'root', 'Reza20270123')
 
 def create_database(connection, query):
     cursor = connection.cursor()
@@ -38,7 +37,7 @@ def create_database(connection, query):
     except Error as err:
         print(f'Error: {err}')
 
-create_database_query = f"""create database {os.environ.get('DB_NAME')}"""
+create_database_query = f"""create database contas"""
 
 create_database(connection, create_database_query)
 
@@ -58,8 +57,7 @@ def create_database_connection(host, user, password, database):
     return connection
 
 
-create_database_connection('127.0.0.1', os.environ.get('DB_USER'), os.environ.get('DB_PW'), os.environ.get('DB_NAME')),
-
+create_database_connection('127.0.0.1', 'root', 'Reza20270123', 'contas')
 
 app = Flask(__name__)
 
@@ -67,7 +65,7 @@ app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://username:password@host:port/database
 # f"mysql+pymysql://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}@{os.getenv('DB_HOST')}/{os.getenv('DB_NAME')}"
 
-app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+pymysql://{os.environ.get('DB_USER')}:{os.environ.get('DB_PW')}@{os.environ.get('DB_HOST')}/{os.environ.get('DB_NAME')}"
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DB_URI', f"mysql+pymysql://root:Reza20270123@127.0.0.1:3306/contas")
 
 
 db = SQLAlchemy()
