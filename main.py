@@ -60,7 +60,6 @@ def create_database_connection(host, user, password, database):
 
 create_database_connection('127.0.0.1', os.environ.get('DB_USER'), os.environ.get('DB_PW'), os.environ.get('DB_NAME')),
 
-
 app = Flask(__name__)
 
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")

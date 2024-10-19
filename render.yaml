@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: mysql-service
+    env: docker
+    plan: starter  # Choose the appropriate plan for your needs
+    dockerfilePath: ./Dockerfile  # Make sure you have a Dockerfile in your project
+    ports:
+      - port: 3306
+        protocol: tcp
