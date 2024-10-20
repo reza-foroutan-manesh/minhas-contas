@@ -40,37 +40,37 @@ def create_server_connection(host, user, password):
 connection = create_server_connection('127.0.0.1', 'root', 'Reza20270123')
 
 
-def create_database(connection, query):
-    cursor = connection.cursor()
-    try:
-        cursor.execute(query)
-        print("Database was created")
-    except Error as err:
-        print(f'Error: {err}')
-
-
-create_database_query = f"""create database contas"""
-
-create_database(connection, create_database_query)
-
-
-def create_database_connection(host, user, password, database):
-    connection = None
-    try:
-        connection = mysql.connector.connect(
-            host=host,
-            user=user,
-            password=password,
-            database=database
-        )
-        print("Database is connecting")
-    except Error as err:
-        print(f"Error: {err}")
-    return connection
-
-
-create_database_connection('127.0.0.1', 'root', 'Reza20270123', 'contas')
-
+# def create_database(connection, query):
+#     cursor = connection.cursor()
+#     try:
+#         cursor.execute(query)
+#         print("Database was created")
+#     except Error as err:
+#         print(f'Error: {err}')
+#
+#
+# create_database_query = f"""create database contas"""
+#
+# create_database(connection, create_database_query)
+#
+#
+# def create_database_connection(host, user, password, database):
+#     connection = None
+#     try:
+#         connection = mysql.connector.connect(
+#             host=host,
+#             user=user,
+#             password=password,
+#             database=database
+#         )
+#         print("Database is connecting")
+#     except Error as err:
+#         print(f"Error: {err}")
+#     return connection
+#
+#
+# create_database_connection('127.0.0.1', 'root', 'Reza20270123', 'contas')
+#
 
 
 
