@@ -12,7 +12,16 @@ import calendar
 from datetime import datetime as dt
 import pandas as pd
 import mysql.connector
+import mysql.connector.cursor
 from mysql.connector import Error
+
+app = Flask(__name__)
+
+app.config["SECRET_KEY"] = 'Reza123456789'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://username:password@host:port/database
+# f"mysql+pymysql://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}@{os.getenv('DB_HOST')}/{os.getenv('DB_NAME')}"
+
+
 
 def create_server_connection(host, user, password):
     connection = None
@@ -62,11 +71,16 @@ def create_database_connection(host, user, password, database):
 
 create_database_connection('127.0.0.1', 'root', 'Reza20270123', 'contas')
 
-app = Flask(__name__)
 
-app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://username:password@host:port/database
-# f"mysql+pymysql://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}@{os.getenv('DB_HOST')}/{os.getenv('DB_NAME')}"
+
+
+
+
+
+
+
+
+
 
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DB_URI', f"mysql+pymysql://root:Reza20270123@127.0.0.1:3306/contas")
 
