@@ -18,87 +18,14 @@ from mysql.connector import Error
 
 app = Flask(__name__)
 
-app.config['MYSQL_HOST'] = '127.0.0.1'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'Reza20270123'
-app.config['MYSQL_DB'] = 'contas'
+
 
 app.config["SECRET_KEY"] = 'Reza123456789'
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://username:password@host:port/database
 # f"mysql+pymysql://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}@{os.getenv('DB_HOST')}/{os.getenv('DB_NAME')}"
 
-def create_app():
-    app = Flask(__name__)
-    app.config.from_object(app)
-    mysql = mysql.connector.connect(
-        host=app.config['MYSQL_HOST'],
-        user=app.config['MYSQL_USER'],
-        password=app.config['MYSQL_PASSWORD'],
-        database=app.config['MYSQL_DB']
-    )
-    return app, mysql
 
-
-def create_server_connection(host, user, password):
-    connection = None
-    try:
-        connection = mysql.connector.connect(
-            host=host,
-            user=user,
-            password=password
-        )
-        print('MySql is connecting')
-    except Error as err:
-        print(f"Error: {err}")
-    return connection
-
-
-connection = create_server_connection('127.0.0.1', 'root', 'Reza20270123')
-
-
-# def create_database(connection, query):
-#     cursor = connection.cursor()
-#     try:
-#         cursor.execute(query)
-#         print("Database was created")
-#     except Error as err:
-#         print(f'Error: {err}')
-#
-#
-# create_database_query = f"""create database contas"""
-#
-# create_database(connection, create_database_query)
-#
-#
-# def create_database_connection(host, user, password, database):
-#     connection = None
-#     try:
-#         connection = mysql.connector.connect(
-#             host=host,
-#             user=user,
-#             password=password,
-#             database=database
-#         )
-#         print("Database is connecting")
-#     except Error as err:
-#         print(f"Error: {err}")
-#     return connection
-#
-#
-# create_database_connection('127.0.0.1', 'root', 'Reza20270123', 'contas')
-#
-
-
-
-
-
-
-
-
-
-
-
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DB_URI', f"mysql+pymysql://root:Reza20270123@127.0.0.1:3306/contas")
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DB_URI', "sqlite:///contas.db")
 
 
 db = SQLAlchemy()
@@ -212,8 +139,11 @@ def register():
             else:
                 db.session.add(new_user)
                 db.session.commit()
+                login_user(new_user)
                 return redirect(url_for('home'))
-        return redirect(url_for('entry'))
+        else:
+            flash("please confirm the password again!")
+            return redirect(url_for('login'))
 
 
 @app.route('/home', methods=['GET', 'POST'])
