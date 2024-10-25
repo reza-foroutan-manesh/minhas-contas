@@ -5,7 +5,7 @@ import mysql
 from flask import Flask, url_for, request, abort, flash, render_template, redirect, jsonify
 from flask_login import UserMixin, login_user, LoginManager, logout_user, current_user
 from flask_sqlalchemy import SQLAlchemy
-from flask_bootstrap import Bootstrap
+from flask_bootstrap import Bootstrap5
 from sqlalchemy import select, String, Float, Integer, Date, Column, func, ForeignKey
 from sqlalchemy.orm import relationship
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -40,7 +40,7 @@ def load_user(user_id):
     return db.get_or_404(User, user_id)
 
 
-Bootstrap(app)
+Bootstrap5(app)
 
 
 class Item(UserMixin, db.Model):
