@@ -2,6 +2,7 @@ import datetime
 import os
 
 import mysql
+import sqlalchemy.exc
 from flask import Flask, url_for, request, abort, flash, render_template, redirect, jsonify
 from flask_login import UserMixin, login_user, LoginManager, logout_user, current_user
 from flask_sqlalchemy import SQLAlchemy
@@ -165,10 +166,11 @@ def home():
             else:
                 new_item = Item(
                     item_month=request.form['month'],
-                    item_price=pd.to_numeric(request.form['price'][3:]),
+                    item_price=int(request.form['price'][3:]),
                     item_name=request.form['item'],
                     user_id=current_user.id
                 )
+                print(type(new_item.item_price))
                 db.session.add(new_item)
                 db.session.commit()
 
@@ -199,17 +201,20 @@ def details():
         price = request.form['price']
 
         # Handle your data here, e.g., update your database
-        print(f'Item ID: {item_id}, Name: {name}, Month: {month}, Price: {price}')
-        item_to_edit = db.session.execute(db.select(Item).where(Item.id == item_id)).scalar_one()
+        # print(f'Item ID: {item_id}, Name: {name}, Month: {month}, Price: {price}')
+        try:
+            item_to_edit = db.session.execute(db.select(Item).where(Item.id == item_id)).scalar_one()
 
-        item_to_edit.user_id = current_user.id
-        item_to_edit.item_name = name
-        item_to_edit.item_month = month
-        item_to_edit.item_price = price
-        item_to_edit.item_data_edit = datetime.datetime.now()
+            item_to_edit.user_id = current_user.id
+            item_to_edit.item_name = name
+            item_to_edit.item_month = month
+            item_to_edit.item_price = price
+            item_to_edit.item_data_edit = datetime.datetime.now()
 
-        db.session.commit()
-        return render_template('details_table.html', data=data)
+            db.session.commit()
+            return render_template('details_table.html', data=data)
+        except sqlalchemy.exc.NoResultFound:
+            pass
     else:
         # pagination without jquery
         # data = db.session.execute(db.select(Item)).scalars().all()
@@ -224,7 +229,7 @@ def details():
         # , data = paginated_data, page = page, pages = pages
         if request.args.get('id'):
             item = Item.query.get_or_404(request.args.get('id'))
-            print(item.item_price)
+            # print(item.item_price)
             return render_template('details_table.html', data=data, is_for_edit=True, selected_id=int(request.args.get('id')))
     return render_template('details_table.html', data=data)
 
@@ -243,7 +248,7 @@ def delete_item():
 @app.route('/edit', methods=['POST'])
 def submit():
     if request.method == 'POST':
-        print(request.args.get('data-id'))
+        # print(request.args.get('data-id'))
         return render_template('details_table.html')
     # data = request.json
     # form = data.get('formData')

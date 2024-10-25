@@ -209,15 +209,3 @@ window.onclick = function(event) {
 
 
 
-
-const mysql = require('mysql');
-const connection = mysql.createConnection({
-  host: '127.0.0.1:3306',
-  user: 'root',
-  password: 'Reza20270123',
-  database: 'contas'
-});
-connection.connect((err) => {
-  if (err) throw err;
-  console.log('Connected to MySQL database!');
-});
