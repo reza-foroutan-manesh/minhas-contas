@@ -1,10 +1,11 @@
 import datetime
 import os
 
+import mysql
 from flask import Flask, url_for, request, abort, flash, render_template, redirect, jsonify
 from flask_login import UserMixin, login_user, LoginManager, logout_user, current_user
 from flask_sqlalchemy import SQLAlchemy
-from flask_bootstrap import Bootstrap5
+from flask_bootstrap import Bootstrap
 from sqlalchemy import select, String, Float, Integer, Date, Column, func, ForeignKey
 from sqlalchemy.orm import relationship
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -17,10 +18,25 @@ from mysql.connector import Error
 
 app = Flask(__name__)
 
+app.config['MYSQL_HOST'] = '127.0.0.1'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = 'Reza20270123'
+app.config['MYSQL_DB'] = 'contas'
+
 app.config["SECRET_KEY"] = 'Reza123456789'
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://username:password@host:port/database
 # f"mysql+pymysql://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}@{os.getenv('DB_HOST')}/{os.getenv('DB_NAME')}"
 
+def create_app():
+    app = Flask(__name__)
+    app.config.from_object(app)
+    mysql = mysql.connector.connect(
+        host=app.config['MYSQL_HOST'],
+        user=app.config['MYSQL_USER'],
+        password=app.config['MYSQL_PASSWORD'],
+        database=app.config['MYSQL_DB']
+    )
+    return app, mysql
 
 
 def create_server_connection(host, user, password):
@@ -97,7 +113,7 @@ def load_user(user_id):
     return db.get_or_404(User, user_id)
 
 
-Bootstrap5(app)
+Bootstrap(app)
 
 
 class Item(UserMixin, db.Model):
