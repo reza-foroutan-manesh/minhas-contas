@@ -263,7 +263,9 @@ def logout():
     logout_user()
     return redirect(url_for('entry'))
 
-
+@app.route('/calculator')
+def calc():
+    return render_template('calculator.html')
 
 if __name__ == '__main__':
     app.run(port=5003, debug=True)
