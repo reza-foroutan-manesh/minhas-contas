@@ -166,7 +166,7 @@ def home():
             else:
                 new_item = Item(
                     item_month=request.form['month'],
-                    item_price=int(request.form['price'][3:]),
+                    item_price=float(request.form['price'][3:]),
                     item_name=request.form['item'],
                     user_id=current_user.id
                 )
