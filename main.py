@@ -154,6 +154,7 @@ def home():
     query = db.session.execute(db.select(Item).where(Item.item_month == dt.now().strftime('%Y-%m'))).scalars()
     prices = [item.item_price for item in query]
     months = [month for month in calendar.month_name]
+    data = db.session.execute(db.select(Item)).scalars().all()
 
     if request.method == "POST":
 
@@ -175,7 +176,15 @@ def home():
                 db.session.commit()
 
         elif action == 'Total':
-            total = sum(prices)
+            # Calculating the total price for current month
+            total = []
+            for item in data:
+                # separating user account's data
+                if current_user.id == item.user_id:
+                    # getting the items related to the current month
+                    if item.item_month == dt.now().strftime('%Y-%m'):
+                        total.append(item.item_price)
+            total = sum(total)
             return render_template('app_page.html', months=months[1:], date=dt, total=total, is_total=True)
         elif action == 'Details':
             return redirect(url_for('details'))
