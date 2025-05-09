@@ -112,6 +112,24 @@ background-color:#ec3014;
   background: linear-gradient(90deg, transparent, #ec3014);
   animation: btn-anim1 2s linear infinite;
 }
+
+    .login-box .user-box select {
+  background-color:rgba(24, 20, 20, 0.987);
+  padding: 10px 0;
+  color: #fff;
+  margin-bottom: 30px;
+  border: none;
+  border-bottom: 1px solid #fff;
+  outline: none;
+  background: transparent;
+          width: 250px;  /* Adjust width */
+    height: 45px;  /* Adjust height */
+}
+    select option {
+
+    max-height: 1px; /* Restrict height */
+    overflow-y: 5px; /* Enable scrolling */
+}
 </style>
 {% endblock %}
 
@@ -122,7 +140,18 @@ background-color:#ec3014;
     <div class="user-box">
             <input name="month" type="month" >
         </div>
-          <div class="user-box">
+
+
+          <div class="user-box " >
+            <select name="category" class="user-box">
+              <option style="background-color:rgba(24, 20, 20, 0.987)"  hidden="hidden"  selected>Category</option>
+                {% for name in categories%}
+                    <option value={{name}} id="category" style="background-color:rgba(24, 20, 20, 0.987)">{{name}}</option>
+                {%endfor%}
+            </select>
+          </div>
+
+      <div class="user-box">
             <input name="item">
             <label>Item</label>
           </div>

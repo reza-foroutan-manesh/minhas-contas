@@ -92,6 +92,7 @@
     <thead>
         <tr>
             <th scope="col" style="color:#2C4E80">Id</th>
+            <th scope="col" style="color:#2C4E80">Category</th>
             <th scope="col" style="color:#2C4E80">Item</th>
             <th scope="col" style="color:#2C4E80">Date Of Purchase</th>
             <th scope="col" style="color:#2C4E80">Price</th>
@@ -104,6 +105,14 @@
                 <tr>
                     <form method="post" action="{{ url_for('details', id=item.id)}}">
                         <th>{{item.id}}<input name="id" value="{{item.id}}" hidden="hidden"></th>
+                        <td>
+                            <select name="category" class="user-box">
+                              <option   hidden="hidden"  selected>Category</option>
+                                {% for name in categories%}
+                                    <option value={{name}} id="category" >{{name}}</option>
+                                {%endfor%}
+                            </select>
+                        </td>
                         <td><input id="name" name="name" type="text" placeholder="{{item.item_name}}" required></td>
                         <td><input id="month" name="month" type="month" value="{{item.item_month}}" required></td>
                         <td><input id="price" name="price"  placeholder="{{item.item_price}}" required></td>
@@ -121,6 +130,7 @@
                 {%if current_user.id == item.user_id%}
                 <tr>
                     <th>{{item.id}}</th>
+                    <td>{{item.item_category}}</td>
                     <td>{{item.item_name}}</td>
                     <td>{{item.item_month}}</td>
                     <td>{{item.item_price}}</td>

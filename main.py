@@ -19,15 +19,12 @@ from mysql.connector import Error
 
 app = Flask(__name__)
 
-
-
 app.config["SECRET_KEY"] = 'Reza123456789'
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://username:password@host:port/database
 # f"mysql+pymysql://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}@{os.getenv('DB_HOST')}/{os.getenv('DB_NAME')}"
 
 
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DB_URI', "sqlite:///contas.db")
-
 
 db = SQLAlchemy()
 db.init_app(app)
@@ -54,6 +51,7 @@ class Item(UserMixin, db.Model):
     item_data_add = db.Column(db.DateTime, server_default=func.now())
     item_data_edit = db.Column(db.DateTime, server_default=func.now(), onupdate=True)
     item_price = db.Column(Float, nullable=False)
+    item_category = db.Column(String(180), nullable=False)
 
 
 class User(UserMixin, db.Model):
@@ -119,7 +117,6 @@ def login():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-
     if request.method == 'POST':
 
         if request.form['register-password'] == request.form['register-password-confirm']:
@@ -146,6 +143,12 @@ def register():
             flash("please confirm the password again!")
             return redirect(url_for('login'))
 
+def life_category():
+    CATEGORIES = ["Housing", "Groceries", "Transportation", "Health", "Debt Payments", "Dining Out", "Entertainment",
+              "Shopping", "Subscriptions", "Gifts & Donations", "Investments & Savings", "Education", "Travel", "Pets",
+              "Emergency Fund"]
+    return CATEGORIES
+
 
 @app.route('/home', methods=['GET', 'POST'])
 def home():
@@ -167,6 +170,7 @@ def home():
             else:
                 new_item = Item(
                     item_month=request.form['month'],
+                    item_category=request.form['category'],
                     item_price=float(request.form['price'][3:]),
                     item_name=request.form['item'],
                     user_id=current_user.id
@@ -185,12 +189,15 @@ def home():
                     if item.item_month == dt.now().strftime('%Y-%m'):
                         total.append(item.item_price)
             total = sum(total)
-            return render_template('app_page.html', months=months[1:], date=dt, total=total, is_total=True)
+            print(dt.now().strftime('%Y-%m'))
+            return render_template('app_page.html', months=months[1:], date=dt, total=total,
+                                   is_total=True)
         elif action == 'Details':
             return redirect(url_for('details'))
         elif action == 'Exit':
             return redirect(url_for('logout'))
-    return render_template('app_page.html', months=months[1:], date=dt)
+
+    return render_template('app_page.html', months=months[1:], date=dt, categories=life_category())
 
 
 @app.route('/open-calculator')
@@ -198,13 +205,16 @@ def open_calculator():
     os.system('calc.exe')
     return "Calculator opened"
 
+
 @app.route('/table', methods=['GET', 'POST'])
 def details():
+
     if not current_user.is_authenticated:
         return redirect(url_for('entry'))
     data = db.session.execute(db.select(Item)).scalars().all()
     if request.method == 'POST':
         item_id = int(request.form['id'])
+        category = request.form['category']
         name = request.form['name']
         month = request.form['month']
         price = request.form['price']
@@ -215,6 +225,7 @@ def details():
             item_to_edit = db.session.execute(db.select(Item).where(Item.id == item_id)).scalar_one()
 
             item_to_edit.user_id = current_user.id
+            item_to_edit.item_category = category
             item_to_edit.item_name = name
             item_to_edit.item_month = month
             item_to_edit.item_price = price
@@ -239,7 +250,8 @@ def details():
         if request.args.get('id'):
             item = Item.query.get_or_404(request.args.get('id'))
             # print(item.item_price)
-            return render_template('details_table.html', data=data, is_for_edit=True, selected_id=int(request.args.get('id')))
+            return render_template('details_table.html', data=data, is_for_edit=True,
+                                   selected_id=int(request.args.get('id')), categories=life_category())
     return render_template('details_table.html', data=data)
 
 
@@ -267,14 +279,17 @@ def submit():
     # return jsonify({'status': 'success', 'data': data})
     return render_template('details_table.html')
 
+
 @app.route('/logout')
 def logout():
     logout_user()
     return redirect(url_for('entry'))
 
+
 @app.route('/calculator')
 def calc():
     return render_template('calculator.html')
+
 
 if __name__ == '__main__':
     app.run(port=5003, debug=True)
