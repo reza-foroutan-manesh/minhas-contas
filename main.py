@@ -18,7 +18,6 @@ import mysql.connector.cursor
 from mysql.connector import Error
 
 app = Flask(__name__)
-
 app.config["SECRET_KEY"] = 'Reza123456789'
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://username:password@host:port/database
 # f"mysql+pymysql://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}@{os.getenv('DB_HOST')}/{os.getenv('DB_NAME')}"
@@ -31,6 +30,8 @@ db.init_app(app)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
+
+
 
 
 @login_manager.user_loader
@@ -196,6 +197,8 @@ def home():
             return redirect(url_for('details'))
         elif action == 'Exit':
             return redirect(url_for('logout'))
+        elif action == 'Analys':
+            return redirect(url_for('analys'))
 
     return render_template('app_page.html', months=months[1:], date=dt, categories=life_category())
 
@@ -290,6 +293,10 @@ def logout():
 def calc():
     return render_template('calculator.html')
 
+
+@app.route('/Analys')
+def analys():
+    return render_template('Google_looker.html')
 
 if __name__ == '__main__':
     app.run(port=5003, debug=True)
